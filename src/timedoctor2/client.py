@@ -1,6 +1,6 @@
 import logging
 import csv
-from datetime import date, datetime
+from datetime import datetime
 
 from keboola.http_client import HttpClient
 from .endpoint_mapping import ENDPOINT_MAPPING
