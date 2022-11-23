@@ -1,10 +1,12 @@
 import logging
 import csv
+from datetime import date, datetime
 
 from keboola.http_client import HttpClient
 from .endpoint_mapping import ENDPOINT_MAPPING
 from requests.exceptions import HTTPError
 from keboola.csvwriter import ElasticDictWriter
+import keboola.utils.date as dutils
 
 
 class TimeDoctor2ClientError(Exception):
@@ -12,20 +14,23 @@ class TimeDoctor2ClientError(Exception):
 
 
 class TimeDoctor2Client:
-    def __init__(self, email, password, company_id, mode, _from, _to):
+    def __init__(self, email, password, company_id, _from, _to):
         self.email = email
         self.password = password
         self.company_id = company_id
-        self.mode = mode
-        self.limit = 10
-        self._from = _from
-        self._to = _to
-
+        self.limit = 100
+        self.dt_format = "%Y-%m-%dT%H:%M:%S"
+        self._from = datetime.strptime(_from, self.dt_format)
+        self._to = datetime.strptime(_to, self.dt_format)
         self.client = HttpClient("https://api2.timedoctor.com/")
         self.token = ""
+
         self.users = []
         self.login()
-        self.get_list_of_users()
+
+        if (self._from is None) or (self._to is None):
+            raise TimeDoctor2ClientError("Parameters from and to cannot be empty.")
+        self.intervals_from, self.intervals_to = self.create_intervals()
 
     def login(self) -> None:
         """
@@ -66,50 +71,50 @@ class TimeDoctor2Client:
         else:
             raise TimeDoctor2ClientError(f"User {self.email} cannot access company with id {self.company_id}.")
 
-    def do_increment(self):
-        pass
+    def create_intervals(self):
 
-    def do_sync(self):
-        pass
+        intervals = dutils.split_dates_to_chunks(self._from, self._to, intv=7, strformat=self.dt_format)
+        intervals_from = []
+        intervals_to = []
+        for interval in intervals:
+            intervals_from.append(interval['start_date'])
+            intervals_to.append(interval['end_date'])
+        return intervals_from, intervals_to
 
-    def get_list_of_users(self) -> None:
-        with open("/Users/dominik/projects/kds-team.ex-time-doctor-2/data/out/tables/users.csv") as f:
+    def get_list_of_users(self, path) -> None:
+        with open(path) as f:
             reader = csv.DictReader(f)
             for row in reader:
                 self.users.append(row["id"])
 
     def process_endpoint(self, endpoint, table_def):
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
-
         if "user" in endpoint_mapping.get("placeholders"):
             with ElasticDictWriter(table_def.full_path, []) as wr:
                 for user in self.users:
-                    params = {
-                        "token": self.token,
-                        "limit": self.limit,
-                        "user": user,
-                        "company": self.company_id,
-                        "from": self._from if self._from else None,
-                        "to": self._to if self._to else None
-                    }
+                    for interval_from, interval_to in zip(self.intervals_from, self.intervals_to):
+                        params = {
+                            "token": self.token,
+                            "user": user,
+                            "company": self.company_id,
+                            "from": interval_from,
+                            "to": interval_to
+                        }
 
-                    r = self.client.get_raw(endpoint_mapping.get('endpoint'), params=params)
+                        r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
 
-                    try:
-                        data = r.json().get("data")[0]
-                    except IndexError:
-                        data = r.json().get("data")
+                        try:
+                            data = r.json().get("data")[0]
+                        except IndexError:
+                            data = r.json().get("data")
 
-                    try:
                         if len(data) > 1:
                             wr.writerows(data)
                         elif len(data) == 0:
                             pass
                         else:
                             wr.writerow(data[0])
-                    except:
-                        print(data)
-                        exit()
+
                 wr.writeheader()
         else:
             has_more = True
@@ -122,27 +127,9 @@ class TimeDoctor2Client:
                         "page": page,
                         "limit": self.limit
                     }
-                    r = self.client.get_raw(ENDPOINT_MAPPING.get('users').get('endpoint'), params=params)
+                    r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
                     wr.writerows(r.json().get("data"))
-                    page += 1
+                    page += self.limit
                     if r.json().get("paging").get("nItems") < self.limit:
                         has_more = False
                 wr.writeheader()
-
-    def get_users(self, table_def):
-        has_more = True
-        page = 0
-        with ElasticDictWriter(table_def.full_path, []) as wr:
-            while has_more:
-                params = {
-                    "token": self.token,
-                    "company": self.company_id,
-                    "page": page,
-                    "limit": self.limit
-                }
-                r = self.client.get_raw(ENDPOINT_MAPPING.get('users').get('endpoint'), params=params)
-                wr.writerows(r.json().get("data"))
-                page += 1
-                if r.json().get("paging").get("nItems") < self.limit:
-                    has_more = False
-            wr.writeheader()

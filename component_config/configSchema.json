@@ -2,18 +2,105 @@
   "type": "object",
   "title": "extractor configuration",
   "required": [
-    "print_hello"
+    "email"
   ],
   "properties": {
-    "print_hello": {
-      "type": "boolean",
-      "title": "Print Hello",
+    "email": {
+      "type": "string",
+      "title": "Email",
       "propertyOrder": 1
     },
-    "debug": {
-      "type": "boolean",
-      "title": "Debug",
+    "#password": {
+      "type": "string",
+      "format": "password",
+      "title": "Password",
       "propertyOrder": 2
+    },
+    "company_id": {
+      "type": "string",
+      "title": "Company ID",
+      "propertyOrder": 3
+    },
+    "use_relative_range": {
+      "type": "boolean",
+      "title": "Use relative range",
+      "description": "If set to true, user can specify relative increment window.",
+      "propertyOrder": 4
+    },
+    "from": {
+      "type": "string",
+      "title": "From",
+      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format. Defaults to now if empty.",
+      "options": {
+        "dependencies": {
+          "use_relative_range": false
+        }
+      },
+      "propertyOrder": 5
+    },
+    "to": {
+      "type": "string",
+      "title": "To",
+      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format. Defaults to now if empty.",
+      "options": {
+        "dependencies": {
+          "use_relative_range": false
+        }
+      },
+      "propertyOrder": 6
+    },
+    "relative_range": {
+      "type": "string",
+      "title": "Relative range",
+      "description": "Enter relative date",
+      "options": {
+        "dependencies": {
+          "use_relative_range": true
+        }
+      },
+      "propertyOrder": 7
+    },
+    "use_statefile": {
+      "type": "boolean",
+      "title": "Use Statefile",
+      "description": "If set to true, component will fetch increments using timestamp from statefile.",
+            "options": {
+        "dependencies": {
+          "use_relative_range": true
+        }
+      },
+      "propertyOrder": 8
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "_users",
+          "edit-time",
+          "worklog",
+          "projects",
+          "tasks",
+          "timeuse"
+        ],
+        "type": "string",
+        "options": {
+          "enum_titles": [
+            "users",
+            "edit-time",
+            "worklog",
+            "projects",
+            "tasks",
+            "timeuse"
+          ]
+        }
+      },
+      "title": "Endpoints",
+      "format": "checkbox",
+      "default": [
+        "users"
+      ],
+      "uniqueItems": true,
+      "propertyOrder": 9
     }
   }
 }

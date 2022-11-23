@@ -4,3 +4,4 @@ mock
 freezegun
 requests==2.28.1
 keboola.csvwriter==1.0.1
+keboola.utils==1.1.0
