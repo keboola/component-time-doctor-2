@@ -104,6 +104,7 @@ class TimeDoctor2Client:
         if "user" in endpoint_mapping.get("placeholders"):
             with ElasticDictWriter(table_def.full_path, []) as wr:
                 for user in self.users:
+                    logging.info(f"Processing user: {user}")
                     for interval_from, interval_to in zip(self.intervals_from, self.intervals_to):
                         params = {
                             "token": self.token,
