@@ -140,8 +140,7 @@ class TimeDoctor2Client:
                             wr.writerow(data[0])
                     processed_users += 1
                     logging.info(f"Process status for endpoint {endpoint}, "
-                                 f"users processed: {processed_users}/{len(self.users)}")
-
+                                 f"users processed: {processed_users}/{len(self.users)+1}")
                 wr.writeheader()
         else:
             has_more = True
