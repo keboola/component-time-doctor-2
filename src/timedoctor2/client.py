@@ -102,6 +102,7 @@ class TimeDoctor2Client:
                         }
 
                         r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
+                        r.raise_for_status()
 
                         try:
                             data = r.json().get("data")[0]
