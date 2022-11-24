@@ -60,17 +60,6 @@
       },
       "propertyOrder": 7
     },
-    "use_statefile": {
-      "type": "boolean",
-      "title": "Use Statefile",
-      "description": "If set to true, component will fetch increments using timestamp from statefile.",
-            "options": {
-        "dependencies": {
-          "use_relative_range": true
-        }
-      },
-      "propertyOrder": 8
-    },
     "endpoints": {
       "type": "array",
       "items": {
