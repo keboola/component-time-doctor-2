@@ -15,14 +15,14 @@ ENDPOINT_MAPPING = {
     'timeuse': {
         'endpoint': '/api/1.0/activity/timeuse',
         'table_name': 'timeuse.csv',
-        'pks': ['parent_id', 'start'],
+        'pks': ['start', 'title', 'value'],
         'placeholders': ['user'],
         'time-window': True
     },
     'edit-time': {
         'endpoint': '/api/1.0/activity/edit-time',
         'table_name': 'edit_time.csv',
-        'pks': ['id', 'start'],
+        'pks': ['id', 'start', 'userId'],
         'placeholders': ['user'],
         'time-window': True
     },
