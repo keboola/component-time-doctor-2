@@ -98,7 +98,7 @@ class TimeDoctor2Client:
             for row in reader:
                 self.users.append(row["id"])
 
-    @backoff.on_exception(backoff.expo, HTTPError, max_tries=5)
+    @backoff.on_exception(backoff.expo, TimeDoctor2RetryableClientError, max_tries=5)
     def process_endpoint(self, endpoint, table_def):
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
         if "user" in endpoint_mapping.get("placeholders"):
