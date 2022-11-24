@@ -1,6 +1,7 @@
 import logging
 import csv
 from datetime import datetime
+import time
 
 from keboola.http_client import HttpClient
 from .endpoint_mapping import ENDPOINT_MAPPING
@@ -22,7 +23,12 @@ class TimeDoctor2Client:
         self.dt_format = "%Y-%m-%dT%H:%M:%S"
         self._from = datetime.strptime(_from, self.dt_format)
         self._to = datetime.strptime(_to, self.dt_format)
-        self.client = HttpClient("https://api2.timedoctor.com/")
+
+        default_header = {
+            'accept': 'application/json'
+        }
+
+        self.client = HttpClient("https://api2.timedoctor.com/", default_http_header=default_header)
         self.token = ""
 
         self.users = []
@@ -101,8 +107,16 @@ class TimeDoctor2Client:
                             "to": interval_to
                         }
 
-                        r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
-                        r.raise_for_status()
+                        try:
+                            r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
+                            r.raise_for_status()
+                        except HTTPError as e:
+                            if r.status_code == 429:
+                                time.sleep(1)
+                                r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
+                            else:
+                                logging.error(f"Got response with status code: {r.status_code}")
+                                raise e
 
                         try:
                             data = r.json().get("data")[0]
