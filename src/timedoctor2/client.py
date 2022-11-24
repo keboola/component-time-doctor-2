@@ -111,9 +111,9 @@ class TimeDoctor2Client:
                         if len(data) > 1:
                             try:
                                 wr.writerows(data)
-                            except:
+                            except Exception as e:
                                 logging.error(data)
-                                raise
+                                raise e
                         elif len(data) == 0:
                             pass
                         else:
