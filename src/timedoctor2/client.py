@@ -99,6 +99,14 @@ class TimeDoctor2Client:
                 self.users.append(row["id"])
 
     @backoff.on_exception(backoff.expo, TimeDoctor2RetryableClientError, max_tries=10)
+    def fetch_data(self, endpoint_mapping, params):
+        try:
+            r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
+            r.raise_for_status()
+            return r
+        except HTTPError as e:
+            raise TimeDoctor2RetryableClientError("Retrying API call") from e
+
     def process_endpoint(self, endpoint, table_def):
         processed_users = 0
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
@@ -114,11 +122,7 @@ class TimeDoctor2Client:
                             "to": interval_to
                         }
 
-                        try:
-                            r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
-                            r.raise_for_status()
-                        except HTTPError as e:
-                            raise TimeDoctor2RetryableClientError("Retrying API call") from e
+                        r = self.fetch_data(endpoint_mapping, params)
 
                         try:
                             data = r.json().get("data")[0]
