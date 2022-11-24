@@ -29,7 +29,8 @@ class TimeDoctor2Client:
         self._to = datetime.strptime(_to, self.dt_format)
 
         default_header = {
-            'accept': 'application/json'
+            'accept': 'application/json',
+            'content': 'application/json'
         }
 
         self.client = HttpClient("https://api2.timedoctor.com/", default_http_header=default_header)
@@ -83,7 +84,7 @@ class TimeDoctor2Client:
 
     def create_intervals(self):
 
-        intervals = dutils.split_dates_to_chunks(self._from, self._to, intv=7, strformat=self.dt_format)
+        intervals = dutils.split_dates_to_chunks(self._from, self._to, intv=14, strformat=self.dt_format)
         intervals_from = []
         intervals_to = []
         for interval in intervals:
@@ -97,7 +98,7 @@ class TimeDoctor2Client:
             for row in reader:
                 self.users.append(row["id"])
 
-    @backoff.on_exception(backoff.expo, TimeDoctor2RetryableClientError, max_tries=5)
+    @backoff.on_exception(backoff.expo, TimeDoctor2RetryableClientError, max_tries=10)
     def process_endpoint(self, endpoint, table_def):
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
         if "user" in endpoint_mapping.get("placeholders"):
