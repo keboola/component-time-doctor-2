@@ -100,11 +100,11 @@ class TimeDoctor2Client:
 
     @backoff.on_exception(backoff.expo, TimeDoctor2RetryableClientError, max_tries=10)
     def process_endpoint(self, endpoint, table_def):
+        processed_users = 0
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
         if "user" in endpoint_mapping.get("placeholders"):
             with ElasticDictWriter(table_def.full_path, []) as wr:
                 for user in self.users:
-                    logging.info(f"Processing user: {user}")
                     for interval_from, interval_to in zip(self.intervals_from, self.intervals_to):
                         params = {
                             "token": self.token,
@@ -138,6 +138,9 @@ class TimeDoctor2Client:
                             pass
                         else:
                             wr.writerow(data[0])
+                    processed_users += 1
+                    logging.info(f"Process status for endpoint {endpoint}, "
+                                 f"users processed: {processed_users}/{len(self.users)}")
 
                 wr.writeheader()
         else:
