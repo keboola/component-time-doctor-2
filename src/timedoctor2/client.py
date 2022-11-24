@@ -2,6 +2,7 @@ import logging
 import csv
 from datetime import datetime
 import time
+import backoff as backoff
 
 from keboola.http_client import HttpClient
 from .endpoint_mapping import ENDPOINT_MAPPING
@@ -11,6 +12,10 @@ import keboola.utils.date as dutils
 
 
 class TimeDoctor2ClientError(Exception):
+    pass
+
+
+class TimeDoctor2RetryableClientError(Exception):
     pass
 
 
@@ -93,6 +98,7 @@ class TimeDoctor2Client:
             for row in reader:
                 self.users.append(row["id"])
 
+    @backoff.on_exception(backoff.expo, HTTPError, max_tries=5)
     def process_endpoint(self, endpoint, table_def):
         endpoint_mapping = ENDPOINT_MAPPING.get(endpoint)
         if "user" in endpoint_mapping.get("placeholders"):
@@ -111,12 +117,7 @@ class TimeDoctor2Client:
                             r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
                             r.raise_for_status()
                         except HTTPError as e:
-                            if r.status_code == 429:
-                                time.sleep(1)
-                                r = self.client.get_raw(endpoint_mapping.get("endpoint"), params=params)
-                            else:
-                                logging.error(f"Got response with status code: {r.status_code}")
-                                raise e
+                            raise TimeDoctor2RetryableClientError("Retrying API call") from e
 
                         try:
                             data = r.json().get("data")[0]
