@@ -1,7 +1,6 @@
 import logging
 import csv
 from datetime import datetime
-import time
 import backoff as backoff
 
 from keboola.http_client import HttpClient
