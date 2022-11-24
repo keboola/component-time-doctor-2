@@ -4,7 +4,7 @@ from datetime import datetime
 
 from keboola.http_client import HttpClient
 from .endpoint_mapping import ENDPOINT_MAPPING
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, JSONDecodeError
 from keboola.csvwriter import ElasticDictWriter
 import keboola.utils.date as dutils
 
@@ -107,6 +107,9 @@ class TimeDoctor2Client:
                             data = r.json().get("data")[0]
                         except IndexError:
                             data = r.json().get("data")
+                        except JSONDecodeError:
+                            logging.error(data)
+                            raise
 
                         if len(data) > 1:
                             try:

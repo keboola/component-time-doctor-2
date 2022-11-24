@@ -1,4 +1,4 @@
-FROM python:3.11.0a1-slim
+FROM python:3.12.0a2-slim
 ENV PYTHONIOENCODING utf-8
 
 COPY /src /code/src/
