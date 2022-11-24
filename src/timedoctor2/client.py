@@ -109,7 +109,11 @@ class TimeDoctor2Client:
                             data = r.json().get("data")
 
                         if len(data) > 1:
-                            wr.writerows(data)
+                            try:
+                                wr.writerows(data)
+                            except:
+                                logging.error(data)
+                                raise
                         elif len(data) == 0:
                             pass
                         else:
