@@ -21,75 +21,75 @@
       "title": "Company ID",
       "propertyOrder": 3
     },
-    "use_relative_range": {
-      "type": "boolean",
-      "title": "Use relative range",
-      "description": "If set to true, user can specify relative increment window.",
-      "propertyOrder": 4
-    },
     "from": {
       "type": "string",
       "title": "From",
-      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format. Defaults to now if empty.",
-      "options": {
-        "dependencies": {
-          "use_relative_range": false
-        }
-      },
+      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format or a relative date of valid dateparser format. Defaults to now if empty.",
       "propertyOrder": 5
     },
     "to": {
       "type": "string",
       "title": "To",
-      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format. Defaults to now if empty.",
-      "options": {
-        "dependencies": {
-          "use_relative_range": false
-        }
-      },
+      "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format or a relative date of valid dateparser format. Defaults to now if empty.",
       "propertyOrder": 6
     },
-    "relative_range": {
-      "type": "string",
-      "title": "Relative range",
-      "description": "Enter relative date",
-      "options": {
-        "dependencies": {
-          "use_relative_range": true
+    "endpoints": {
+      "type": "object",
+      "title": "Endpoints",
+      "properties": {
+        "_users": {
+          "type": "boolean",
+          "title": "users",
+          "format": "checkbox",
+          "propertyOrder": 10
+        },
+        "worklog": {
+          "type": "boolean",
+          "title": "worklog",
+          "format": "checkbox",
+          "options": {
+            "dependencies": {
+              "_users": true
+            }
+          },
+          "propertyOrder": 20
+        },
+        "edit-time": {
+          "type": "boolean",
+          "title": "edit-time",
+          "format": "checkbox",
+          "options": {
+            "dependencies": {
+              "_users": true
+            }
+          },
+          "propertyOrder": 30
+        },
+        "timeuse": {
+          "type": "boolean",
+          "title": "timeuse",
+          "format": "checkbox",
+          "options": {
+            "dependencies": {
+              "_users": true
+            }
+          },
+          "propertyOrder": 40
+        },
+        "projects": {
+          "type": "boolean",
+          "title": "projects",
+          "format": "checkbox",
+          "propertyOrder": 50
+        },
+        "tasks": {
+          "type": "boolean",
+          "title": "tasks",
+          "format": "checkbox",
+          "propertyOrder": 60
         }
       },
       "propertyOrder": 7
-    },
-    "endpoints": {
-      "type": "array",
-      "items": {
-        "enum": [
-          "_users",
-          "edit-time",
-          "worklog",
-          "projects",
-          "tasks",
-          "timeuse"
-        ],
-        "type": "string",
-        "options": {
-          "enum_titles": [
-            "users",
-            "edit-time",
-            "worklog",
-            "projects",
-            "tasks",
-            "timeuse"
-          ]
-        }
-      },
-      "title": "Endpoints",
-      "format": "checkbox",
-      "default": [
-        "users"
-      ],
-      "uniqueItems": true,
-      "propertyOrder": 9
     }
   }
 }
