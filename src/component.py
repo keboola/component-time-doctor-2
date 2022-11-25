@@ -88,8 +88,8 @@ class Component(ComponentBase):
                 client.get_list_of_users(table.full_path)
 
     def make_ts_from_ts_string(self, _from, _to):
-        _from = _from if _from is not "" else "now"
-        _to = _to if _to is not "" else "now"
+        _from = _from if _from != "" else "now"
+        _to = _to if _to != "" else "now"
         print(_from, _to)
         start_date, end_date = parse_datetime_interval(_from, _to, self.dt_format)
         return start_date, end_date
