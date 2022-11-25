@@ -21,7 +21,9 @@ KEY_TO = 'to'
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
-REQUIRED_PARAMETERS = [KEY_EMAIL, KEY_PASSWORD, KEY_COMPANY_ID, KEY_ENDPOINTS]
+REQUIRED_PARAMETERS = []
+# KEY_EMAIL, KEY_PASSWORD, KEY_COMPANY_ID, KEY_ENDPOINTS
+# set up nested parameters here
 ENDPOINTS = list(ENDPOINT_MAPPING.keys())
 
 
@@ -43,10 +45,10 @@ class Component(ComponentBase):
         self.email = params.get("authorization").get(KEY_EMAIL)
         self.password = params.get("authorization").get(KEY_PASSWORD)
         self.company_id = params.get("authorization").get(KEY_COMPANY_ID)
-        self.now = datetime.now()
-        self.dt_format = "%Y-%m-%dT%H:%M:%S"
         _from = params.get("time-range").get(KEY_FROM)
         _to = params.get("time-range").get(KEY_TO)
+        self.now = datetime.now()
+        self.dt_format = "%Y-%m-%dT%H:%M:%S"
         self._from, self._to = self.make_ts_from_ts_string(_from, _to)
 
         endpoints = params.get("endpoints")
@@ -57,6 +59,7 @@ class Component(ComponentBase):
                     self.endpoints.append(endpoint)
             else:
                 raise UserException(f"Endpoint {endpoint} is not supported.")
+        self.endpoints.sort()
         logging.info(f"Component will process following endpoints: {self.endpoints}")
 
     def run(self):
