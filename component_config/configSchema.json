@@ -1,10 +1,12 @@
 {
   "type": "object",
   "title": "extractor configuration",
-  "required": [
-    "email"
-  ],
   "properties": {
+    "authorization": {
+      "type": "object",
+      "title": "Authorization",
+      "propertyOrder": 1,
+      "properties": {
     "email": {
       "type": "string",
       "title": "Email",
@@ -20,19 +22,27 @@
       "type": "string",
       "title": "Company ID",
       "propertyOrder": 3
+    }},
+   "required": ["email"]
     },
+    "time-range": {
+      "type": "object",
+      "title": "Time range settings",
+      "propertyOrder": 2,
+      "properties": {
     "from": {
       "type": "string",
       "title": "From",
       "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format or a relative date of valid dateparser format. Defaults to now if empty.",
-      "propertyOrder": 5
+      "propertyOrder": 1
     },
     "to": {
       "type": "string",
       "title": "To",
       "description": "Enter timestamp in `%Y-%m-%dT%H:%M:%S` format or a relative date of valid dateparser format. Defaults to now if empty.",
-      "propertyOrder": 6
-    },
+      "propertyOrder": 2
+      }
+    }},
     "endpoints": {
       "type": "object",
       "title": "Endpoints",

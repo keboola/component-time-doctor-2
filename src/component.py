@@ -40,13 +40,13 @@ class Component(ComponentBase):
         super().__init__()
         self.validate_configuration_parameters(REQUIRED_PARAMETERS)
         params = self.configuration.parameters
-        self.email = params.get(KEY_EMAIL)
-        self.password = params.get(KEY_PASSWORD)
-        self.company_id = params.get(KEY_COMPANY_ID)
+        self.email = params.get("authorization").get(KEY_EMAIL)
+        self.password = params.get("authorization").get(KEY_PASSWORD)
+        self.company_id = params.get("authorization").get(KEY_COMPANY_ID)
         self.now = datetime.now()
         self.dt_format = "%Y-%m-%dT%H:%M:%S"
-        _from = params.get(KEY_FROM)
-        _to = params.get(KEY_TO)
+        _from = params.get("time-range").get(KEY_FROM)
+        _to = params.get("time-range").get(KEY_TO)
         self._from, self._to = self.make_ts_from_ts_string(_from, _to)
 
         endpoints = params.get("endpoints")
