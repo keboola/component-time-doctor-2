@@ -18,12 +18,10 @@ KEY_COMPANY_ID = "company_id"
 KEY_ENDPOINTS = "endpoints"
 KEY_FROM = 'from'
 KEY_TO = 'to'
-KEY_USE_RELATIVE_RANGE = 'use_relative_range'
-KEY_RELATIVE_RANGE = 'relative_range'
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
-REQUIRED_PARAMETERS = [KEY_EMAIL, KEY_PASSWORD, KEY_COMPANY_ID, KEY_ENDPOINTS, KEY_USE_RELATIVE_RANGE]
+REQUIRED_PARAMETERS = [KEY_EMAIL, KEY_PASSWORD, KEY_COMPANY_ID, KEY_ENDPOINTS]
 ENDPOINTS = list(ENDPOINT_MAPPING.keys())
 
 
@@ -46,11 +44,6 @@ class Component(ComponentBase):
         self.password = params.get(KEY_PASSWORD)
         self.company_id = params.get(KEY_COMPANY_ID)
         self.now = datetime.now()
-        self.use_relative_range = params.get(KEY_USE_RELATIVE_RANGE)
-        self.relative_range = params.get(KEY_RELATIVE_RANGE)
-        # endpoints = params.get(KEY_ENDPOINTS)
-        # endpoints.sort()
-        # self.endpoints = endpoints
         self.dt_format = "%Y-%m-%dT%H:%M:%S"
         _from = params.get(KEY_FROM)
         _to = params.get(KEY_TO)
@@ -93,11 +86,6 @@ class Component(ComponentBase):
         print(_from, _to)
         start_date, end_date = parse_datetime_interval(_from, _to, self.dt_format)
         return start_date, end_date
-
-    def get_relative_date(self):
-        start_date, end_date = parse_datetime_interval(self.relative_range,
-                                                       self.now.strftime(self.dt_format), self.dt_format)
-        return start_date
 
 
 """

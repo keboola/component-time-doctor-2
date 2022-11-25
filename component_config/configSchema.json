@@ -36,6 +36,7 @@
     "endpoints": {
       "type": "object",
       "title": "Endpoints",
+      "description": "It is necessary to use users endpoint for endpoints worklog, edit-time and timeuse",
       "properties": {
         "_users": {
           "type": "boolean",
