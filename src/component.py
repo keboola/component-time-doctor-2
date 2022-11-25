@@ -18,10 +18,12 @@ KEY_COMPANY_ID = "company_id"
 KEY_ENDPOINTS = "endpoints"
 KEY_FROM = 'from'
 KEY_TO = 'to'
+NEST_AUTHORIZATION = 'authorization'
+NEST_TIME_RANGE = 'time-range'
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
-REQUIRED_PARAMETERS = []
+REQUIRED_PARAMETERS = [NEST_AUTHORIZATION, NEST_TIME_RANGE]
 # KEY_EMAIL, KEY_PASSWORD, KEY_COMPANY_ID, KEY_ENDPOINTS
 # set up nested parameters here
 ENDPOINTS = list(ENDPOINT_MAPPING.keys())
@@ -42,16 +44,16 @@ class Component(ComponentBase):
         super().__init__()
         self.validate_configuration_parameters(REQUIRED_PARAMETERS)
         params = self.configuration.parameters
-        self.email = params.get("authorization").get(KEY_EMAIL)
-        self.password = params.get("authorization").get(KEY_PASSWORD)
-        self.company_id = params.get("authorization").get(KEY_COMPANY_ID)
-        _from = params.get("time-range").get(KEY_FROM)
-        _to = params.get("time-range").get(KEY_TO)
+        self.email = params.get(NEST_AUTHORIZATION).get(KEY_EMAIL)
+        self.password = params.get(NEST_AUTHORIZATION).get(KEY_PASSWORD)
+        self.company_id = params.get(NEST_AUTHORIZATION).get(KEY_COMPANY_ID)
+        _from = params.get(NEST_TIME_RANGE).get(KEY_FROM)
+        _to = params.get(NEST_TIME_RANGE).get(KEY_TO)
         self.now = datetime.now()
         self.dt_format = "%Y-%m-%dT%H:%M:%S"
         self._from, self._to = self.make_ts_from_ts_string(_from, _to)
 
-        endpoints = params.get("endpoints")
+        endpoints = params.get(KEY_ENDPOINTS)
         self.endpoints = []
         for endpoint in endpoints:
             if endpoint in ENDPOINTS:
