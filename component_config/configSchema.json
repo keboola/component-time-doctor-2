@@ -21,6 +21,7 @@
     "company_id": {
       "type": "string",
       "title": "Company ID",
+      "description": "If not specified, component will fetch data for the first company that companies endpoint will return.",
       "propertyOrder": 3
     }},
    "required": ["email", "#password"]
