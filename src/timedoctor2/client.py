@@ -19,7 +19,7 @@ class TimeDoctor2RetryableClientError(Exception):
 
 
 class TimeDoctor2Client:
-    def __init__(self, email, password, company_id, _from, _to):
+    def __init__(self, email, password, _from, _to, company_id=None):
         self.email = email
         self.password = password
         self.company_id = company_id
@@ -77,10 +77,15 @@ class TimeDoctor2Client:
         available_companies = r.json().get("data").get("companies")
         companies = [company.get("id") for company in available_companies]
 
-        if self.company_id in companies:
-            logging.info(f"User {self.email} has been successfully authorized for company with id {self.company_id}.")
+        if self.company_id:
+            if self.company_id in companies:
+                logging.info(f"User {self.email} has been successfully authorized for company with id "
+                             f"{self.company_id}.")
+            else:
+                raise TimeDoctor2ClientError(f"User {self.email} cannot access company with id {self.company_id}.")
         else:
-            raise TimeDoctor2ClientError(f"User {self.email} cannot access company with id {self.company_id}.")
+            self.company_id = companies[0]
+            logging.info(f"company_id is not defined. Component will use company_id {self.company_id}")
 
     def create_intervals(self):
 

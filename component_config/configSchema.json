@@ -23,7 +23,7 @@
       "title": "Company ID",
       "propertyOrder": 3
     }},
-   "required": ["email"]
+   "required": ["email", "#password"]
     },
     "time-range": {
       "type": "object",
