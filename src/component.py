@@ -93,7 +93,10 @@ class Component(ComponentBase):
     def make_ts_from_ts_string(self, _from, _to):
         _from = _from if _from != "" else "now"
         _to = _to if _to != "" else "now"
-        start_date, end_date = parse_datetime_interval(_from, _to, self.dt_format)
+        try:
+            start_date, end_date = parse_datetime_interval(_from, _to, self.dt_format)
+        except TypeError as e:
+            raise UserException(f"Cannot parse dates: {_from}, {_to} in format {self.format}.") from e
         return start_date, end_date
 
 
