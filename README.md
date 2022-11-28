@@ -36,7 +36,8 @@ If you need more endpoints, please submit your request to
 Configuration
 =============
 
-##extractor configuration
+## extractor configuration
+
  - Email (email) - [REQ] email for user whose credentials the data will be fetched
  - Password (#password) - [REQ] user's password
  - Company ID (company_id) - [OPT] Company ID - If not specified, component will fetch data for the first company
