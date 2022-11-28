@@ -96,7 +96,7 @@ class Component(ComponentBase):
         try:
             start_date, end_date = parse_datetime_interval(_from, _to, self.dt_format)
         except TypeError as e:
-            raise UserException(f"Cannot parse dates: {_from}, {_to} in format {self.format}.") from e
+            raise UserException(f"Cannot parse dates: {_from}, {_to} in format {self.dt_format}.") from e
         return start_date, end_date
 
 
