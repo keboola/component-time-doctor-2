@@ -20,6 +20,7 @@ KEY_FROM = 'from'
 KEY_TO = 'to'
 NEST_AUTHORIZATION = 'authorization'
 NEST_TIME_RANGE = 'time-range'
+KEY_INCREMENT = 'increment'
 
 # list of mandatory parameters => if some is missing,
 # component will fail with readable message on initialization.
@@ -52,6 +53,9 @@ class Component(ComponentBase):
         self.now = datetime.now()
         self.dt_format = "%Y-%m-%dT%H:%M:%S"
         self._from, self._to = self.make_ts_from_ts_string(_from, _to)
+        self.increment = params.get(KEY_INCREMENT)
+        if not self.increment:
+            self.increment = False
 
         endpoints = params.get(KEY_ENDPOINTS)
         self.endpoints = []
@@ -79,7 +83,8 @@ class Component(ComponentBase):
         for endpoint in self.endpoints:
             logging.info(f"Processing endpoint: {endpoint}")
             table = self.create_out_table_definition(ENDPOINT_MAPPING[endpoint]["table_name"],
-                                                     primary_key=ENDPOINT_MAPPING[endpoint]["pks"], incremental=True)
+                                                     primary_key=ENDPOINT_MAPPING[endpoint]["pks"],
+                                                     incremental=self.increment)
             client.process_endpoint(endpoint, table)
             self.write_manifest(table)
             if endpoint == '_users':

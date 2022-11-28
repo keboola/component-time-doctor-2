@@ -101,6 +101,13 @@
         }
       },
       "propertyOrder": 7
+    },
+      "increment": {
+      "type": "boolean",
+      "title": "Incremental load",
+        "description": "If set to false, component will truncate data in existing Keboola tables.",
+        "default": true,
+      "propertyOrder": 8
     }
   }
 }
