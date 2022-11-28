@@ -2,8 +2,6 @@
 =============
 
 Time Doctor 2 Extractor fetches data from TimeDoctor 2 API.
-Supported endpoints are:
-
 
 
 **Table of contents:**
