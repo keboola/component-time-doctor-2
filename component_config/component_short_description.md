@@ -1,1 +1,1 @@
-Testing functional sample extractor for purposes of the python component template. 
+Time Doctor 2 allows you to track how much time you spend on your tasks from other apps such as Jira, Trello, Asana, and others.
