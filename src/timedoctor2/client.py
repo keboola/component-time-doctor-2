@@ -124,7 +124,8 @@ class TimeDoctor2Client:
                             "user": user,
                             "company": self.company_id,
                             "from": interval_from,
-                            "to": interval_to
+                            "to": interval_to,
+                            "detail": True
                         }
 
                         r = self.fetch_data(endpoint_mapping, params)
