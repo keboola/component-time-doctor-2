@@ -8,21 +8,21 @@ ENDPOINT_MAPPING = {
     'worklog': {
         'endpoint': '/api/1.0/activity/worklog',
         'table_name': 'worklog.csv',
-        'pks': [],
+        'pks': ['userId', 'start'],
         'placeholders': ['user'],
         'time-window': True
     },
     'timeuse': {
         'endpoint': '/api/1.0/activity/timeuse',
         'table_name': 'timeuse.csv',
-        'pks': [],
+        'pks': ['start', 'title', 'value'],
         'placeholders': ['user'],
         'time-window': True
     },
     'edit-time': {
         'endpoint': '/api/1.0/activity/edit-time',
         'table_name': 'edit_time.csv',
-        'pks': [],
+        'pks': ['id', 'start', 'userId'],
         'placeholders': ['user'],
         'time-window': True
     },
