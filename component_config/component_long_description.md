@@ -1,7 +1,5 @@
-Time Doctor 2 Extractor fetches data from TimeDoctor 2 API.
+This Extractor fetches data from TimeDoctor 2 API and supports following endpoints:
 
-Supported endpoints
-===================
 - users
 - tasks
 - projects
