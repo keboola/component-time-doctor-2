@@ -89,7 +89,7 @@ class TimeDoctor2Client:
 
     def create_intervals(self):
 
-        intervals = dutils.split_dates_to_chunks(self._from, self._to, intv=14, strformat=self.dt_format)
+        intervals = dutils.split_dates_to_chunks(self._from, self._to, intv=7, strformat=self.dt_format)
         intervals_from = []
         intervals_to = []
         for interval in intervals:
