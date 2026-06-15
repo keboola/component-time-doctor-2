@@ -1,1 +1,1 @@
-Time Doctor 2 allows you to track how much time you spend on your tasks from other apps such as Jira, Trello, Asana, and others.
+Extracts users, tasks, projects, worklog, edit-time, and timeuse data from the Time Doctor 2 API.
